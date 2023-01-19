@@ -8,7 +8,7 @@ interface IForm {
   keyword: string;
 }
 
-function Header() {
+const Header = () => {
   const { register, handleSubmit } = useForm<IForm>();
   const [search, setSearch] = useState(false);
   const navigate = useNavigate();
@@ -95,7 +95,7 @@ function Header() {
       </Col>
     </Nav>
   );
-}
+};
 
 const Nav = styled(motion.nav)`
   display: flex;
