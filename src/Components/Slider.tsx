@@ -1,18 +1,18 @@
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
-import { IGetMoviesResult } from "../utils/api";
+import { IGetMoviesResult } from "../typing";
 import { makeImagePath } from "../utils/utils";
 
 const offset = 6;
 
-interface ISlider {
+interface IProps {
   index: number;
   toggleLeaving: any;
   data?: IGetMoviesResult;
   onBoxClicked: any;
 }
 
-function Slider({ index, toggleLeaving, data, onBoxClicked }: ISlider) {
+function Slider({ index, toggleLeaving, data, onBoxClicked }: IProps) {
   return (
     <Wrapper>
       <SilderTitle>Trending Now</SilderTitle>
