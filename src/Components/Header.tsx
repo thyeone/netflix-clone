@@ -9,7 +9,7 @@ interface IForm {
 }
 
 const Header = () => {
-  const { register, handleSubmit } = useForm<IForm>();
+  const { register, handleSubmit, setValue } = useForm<IForm>();
   const [search, setSearch] = useState(false);
   const navigate = useNavigate();
   const homeMatch = useMatch("/");
@@ -28,8 +28,9 @@ const Header = () => {
     setSearch((prev) => !prev);
   };
 
-  const submitForm = (data: IForm) => {
-    navigate(`/search?keyword=${data.keyword}`);
+  const searchSubmit = (data: IForm) => {
+    window.location.replace(`/search?keyword=${data.keyword}`);
+    setValue("keyword", "");
   };
 
   useEffect(() => {
@@ -69,7 +70,7 @@ const Header = () => {
         </Items>
       </Col>
       <Col>
-        <Search onSubmit={handleSubmit(submitForm)}>
+        <Search onSubmit={handleSubmit(searchSubmit)}>
           <motion.svg
             onClick={toggleSearch}
             animate={{ x: search ? -160 : 0 }}
@@ -89,7 +90,7 @@ const Header = () => {
             animate={inputAnimation}
             initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}
-            placeholder="제목, 사람, 장르"
+            placeholder="영화, TV Show 제목 검색"
           />
         </Search>
       </Col>
@@ -97,7 +98,7 @@ const Header = () => {
   );
 };
 
-const Nav = styled(motion.nav)`
+const Nav = styled(motion.header)`
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -4,10 +4,9 @@ import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Banner from "../Components/Banner";
 import MovieModal from "../Components/MovieModal";
-import Slider from "../Components/Slider";
+import Row from "../Components/Row";
 import { IGetMoviesResult } from "../typing";
 import { NowPlaying } from "../utils/api";
-import { makeImagePath } from "../utils/utils";
 
 const offset = 6;
 
@@ -29,6 +28,7 @@ function Home() {
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
+
   const toggleLeaving = () => {
     setLeaving((prev) => !prev);
   };
@@ -52,7 +52,7 @@ function Home() {
       ) : (
         <>
           <Banner increaseIndex={increaseIndex} nowPlaying={nowPlaying} />
-          <Slider
+          <Row
             index={index}
             data={nowPlaying}
             toggleLeaving={toggleLeaving}

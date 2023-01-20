@@ -12,12 +12,12 @@ interface IProps {
   onBoxClicked: any;
 }
 
-function Slider({ index, toggleLeaving, data, onBoxClicked }: IProps) {
+function Row({ index, toggleLeaving, data, onBoxClicked }: IProps) {
   return (
     <Wrapper>
-      <SilderTitle>Trending Now</SilderTitle>
+      <SilderTitle>Now Playing</SilderTitle>
       <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-        <Row
+        <Slider
           key={index}
           variants={rowVariants}
           initial="hidden"
@@ -27,9 +27,9 @@ function Slider({ index, toggleLeaving, data, onBoxClicked }: IProps) {
         >
           {data?.results
             .slice(1)
-            .slice(offset * index, offset * index + offset)
+            .slice(offset * index, offset * index + offset - 1)
             .map((movie) => (
-              <SliderBox
+              <Box
                 key={movie.id}
                 layoutId={movie.id + ""}
                 onClick={() => onBoxClicked(movie.id)}
@@ -44,9 +44,9 @@ function Slider({ index, toggleLeaving, data, onBoxClicked }: IProps) {
                 <Info variants={infoVariants}>
                   <h4>{movie.title}</h4>
                 </Info>
-              </SliderBox>
+              </Box>
             ))}
-        </Row>
+        </Slider>
       </AnimatePresence>
     </Wrapper>
   );
@@ -55,6 +55,9 @@ function Slider({ index, toggleLeaving, data, onBoxClicked }: IProps) {
 const Wrapper = styled.div`
   position: relative;
   top: -160px;
+  @media screen and (min-width: 1920px) {
+    top: -250px;
+  }
 `;
 
 const SilderTitle = styled.h2`
@@ -64,15 +67,23 @@ const SilderTitle = styled.h2`
   margin-left: 50px;
 `;
 
-const Row = styled(motion.div)`
+const Slider = styled(motion.div)`
   position: absolute;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   width: 100%;
+  overflow: hidden;
+  @media screen and (min-width: 1920px) {
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+    overflow: hidden;
+  }
 `;
 
-const SliderBox = styled(motion.div)<{ bgphoto: string }>`
+const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: #fff;
   width: 260px;
   height: 144px;
@@ -81,6 +92,7 @@ const SliderBox = styled(motion.div)<{ bgphoto: string }>`
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
+
   cursor: pointer;
   &:first-child {
     transform-origin: center left;
@@ -140,4 +152,4 @@ const infoVariants = {
   },
 };
 
-export default Slider;
+export default Row;

@@ -10,10 +10,9 @@ ${reset};
   box-sizing: border-box;
 }
 body {
-  /* font-family: 'Source Sans Pro', sans-serif; */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   background-color: #000;
-  color:${(props) => props.theme.white.darker};
+  color:#fff;
   }
  a {
     text-decoration : none;
