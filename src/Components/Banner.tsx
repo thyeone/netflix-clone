@@ -3,14 +3,12 @@ import { IGetMoviesResult } from "../typing";
 import { makeImagePath } from "../utils/utils";
 
 interface IProps {
-  increaseIndex: () => void;
   nowPlaying?: IGetMoviesResult;
 }
 
-function Banner({ increaseIndex, nowPlaying }: IProps) {
+function Banner({ nowPlaying }: IProps) {
   return (
     <Wrapper
-      onClick={increaseIndex}
       bgPhoto={makeImagePath(nowPlaying?.results[0].backdrop_path || "")}
     >
       <Title>{nowPlaying?.results[0].original_title}</Title>

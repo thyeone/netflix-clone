@@ -6,32 +6,28 @@ import Banner from "../Components/Banner";
 import MovieModal from "../Components/MovieModal";
 import Row from "../Components/Row";
 import { IGetMoviesResult } from "../typing";
-import { NowPlaying } from "../utils/api";
+import { NowPlaying, PopularMovies, TopRatedMovies } from "../utils/api";
 
-const offset = 6;
+const firstRow = 0;
+const secondRow = 1;
+const thirdRow = 2;
 
 function Home() {
-  const navigate = useNavigate();
-  const movieMatch = useMatch("/movies/:movieId");
   const { isLoading, data: nowPlaying } = useQuery<IGetMoviesResult>(
     ["movies", "nowPlaying"],
     NowPlaying
   );
-  const [index, setIndex] = useState(0);
-  const [leaving, setLeaving] = useState(false);
-  const increaseIndex = () => {
-    if (nowPlaying) {
-      if (leaving) return;
-      toggleLeaving();
-      const totalMovies = nowPlaying.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
-      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-    }
-  };
+  const { data: popularMovies } = useQuery<IGetMoviesResult>(
+    ["movies", "popularMovies"],
+    PopularMovies
+  );
+  const { data: topRatedMovies } = useQuery<IGetMoviesResult>(
+    ["movies", "topRatedMovies"],
+    TopRatedMovies
+  );
+  const navigate = useNavigate();
+  const movieMatch = useMatch("/movies/:movieId");
 
-  const toggleLeaving = () => {
-    setLeaving((prev) => !prev);
-  };
   const onBoxClicked = (movieId: number) => {
     navigate(`/movies/${movieId}`);
   };
@@ -51,11 +47,23 @@ function Home() {
         </Loader>
       ) : (
         <>
-          <Banner increaseIndex={increaseIndex} nowPlaying={nowPlaying} />
+          <Banner nowPlaying={nowPlaying} />
           <Row
-            index={index}
+            rowIndex={firstRow}
+            title={"Trending Now"}
+            data={popularMovies}
+            onBoxClicked={onBoxClicked}
+          />
+          <Row
+            rowIndex={secondRow}
+            title={"Now Playing"}
             data={nowPlaying}
-            toggleLeaving={toggleLeaving}
+            onBoxClicked={onBoxClicked}
+          />
+          <Row
+            rowIndex={thirdRow}
+            title={"Top Rated"}
+            data={topRatedMovies}
             onBoxClicked={onBoxClicked}
           />
           <MovieModal
