@@ -50,16 +50,17 @@ function Home() {
           <Banner nowPlaying={nowPlaying} />
           <Row
             rowIndex={firstRow}
-            title={"Trending Now"}
-            data={popularMovies}
-            onBoxClicked={onBoxClicked}
-          />
-          <Row
-            rowIndex={secondRow}
             title={"Now Playing"}
             data={nowPlaying}
             onBoxClicked={onBoxClicked}
           />
+          <Row
+            rowIndex={secondRow}
+            title={"Trending Now"}
+            data={popularMovies}
+            onBoxClicked={onBoxClicked}
+          />
+
           <Row
             rowIndex={thirdRow}
             title={"Top Rated"}

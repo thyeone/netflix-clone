@@ -48,7 +48,9 @@ function Search() {
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
 
-  return (
+  return isLoading ? (
+    <span>Loading ...</span>
+  ) : (
     <Wrapper>
       {data && data?.results.length > 0 ? (
         <>

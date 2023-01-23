@@ -1,6 +1,6 @@
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { IGetMoviesResult } from "../typing";
 import { makeImagePath } from "../utils/utils";
@@ -17,35 +17,31 @@ interface IProps {
 function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
   const [index, setIndex] = useState([0, 0, 0]);
   const [leaving, setLeaving] = useState(false);
+  const [next, setNext] = useState(true);
 
-  const increaseIndex = () => {
+  const changeIndex = (right: boolean, rowIndex: number) => {
     if (data) {
       if (leaving) return;
       toggleLeaving();
-      const totalMovies = data.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset);
-      setIndex((prev) => {
-        const result = [...prev];
-        result[rowIndex] === maxIndex
-          ? (result[rowIndex] = 0)
-          : (result[rowIndex] += 1);
-        return result;
-      });
-    }
-  };
-  const decreaseIndex = () => {
-    if (data) {
-      if (leaving) return;
-      toggleLeaving();
+      setNext(right);
       const totalMovies = data.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
-      setIndex((prev) => {
-        const result = [...prev];
-        result[rowIndex] === 0
-          ? (result[rowIndex] = maxIndex)
-          : (result[rowIndex] -= 1);
-        return result;
-      });
+
+      right
+        ? setIndex((prev) => {
+            const result = [...prev];
+            result[rowIndex] >= maxIndex
+              ? (result[rowIndex] = 0)
+              : (result[rowIndex] += 1);
+            return result;
+          })
+        : setIndex((prev) => {
+            const result = [...prev];
+            result[rowIndex] === 0
+              ? (result[rowIndex] = maxIndex)
+              : (result[rowIndex] -= 1);
+            return result;
+          });
     }
   };
   const toggleLeaving = () => {
@@ -55,16 +51,27 @@ function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
   return (
     <Wrapper>
       <SilderTitle>{title}</SilderTitle>
-      <ArrowBtn variants={arrowVariants}>
+      <ArrowBtn>
         <PrevButton>
-          <LeftOutlined onClick={decreaseIndex} />
+          <LeftOutlined
+            className="arrow"
+            onClick={() => changeIndex(false, rowIndex)}
+          />
         </PrevButton>
-        <NextButton className="arrow">
-          <RightOutlined onClick={increaseIndex} />
+        <NextButton>
+          <RightOutlined
+            className="arrow"
+            onClick={() => changeIndex(true, rowIndex)}
+          />
         </NextButton>
       </ArrowBtn>
-      <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+      <AnimatePresence
+        initial={false}
+        onExitComplete={toggleLeaving}
+        custom={next}
+      >
         <Slider
+          custom={next}
           key={index[rowIndex]}
           variants={rowVariants}
           initial="hidden"
@@ -78,7 +85,7 @@ function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
             .map((movie) => (
               <Box
                 key={movie.id}
-                layoutId={movie.id + ""}
+                layoutId={movie.id + rowIndex + ""}
                 onClick={() => onBoxClicked(movie.id)}
                 variants={BoxVariants}
                 whileHover="hover"
@@ -99,81 +106,17 @@ function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
   );
 }
 
-const arrowVariants = {
-  hidden: {
-    fillOpacity: 0,
-  },
-  visible: {
-    opacity: 1,
-  },
-  exit: {
-    opacity: 0,
-  },
-};
-
-const ArrowBtn = styled(motion.div)`
-  position: relative;
-  top: 110px;
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-`;
-
-const PrevButton = styled(motion.div)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 50%;
-  padding: 8px;
-  z-index: 999;
-  cursor: pointer;
-  margin-left: 40px;
-  opacity: 1;
-  svg {
-    width: 20px;
-    height: 20px;
-    &:hover {
-      scale: 1.5;
-      transition: 1s;
-      stroke: #323232;
-      opacity: 1;
-    }
-  }
-  path {
-    stroke-width: 1px;
-    stroke: white;
-  }
-`;
-
-const NextButton = styled(motion.div)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 50%;
-  padding: 8px;
-  z-index: 999;
-  cursor: pointer;
-  opacity: 1;
-  svg {
-    width: 20px;
-    height: 20px;
-    &:hover {
-      scale: 1.2;
-      stroke: #323232;
-      opacity: 1;
-    }
-  }
-`;
-
 const Wrapper = styled.div`
   position: relative;
   top: -130px;
   min-height: 230px;
+  overflow-x: hidden;
   @media screen and (min-width: 1920px) {
     top: -250px;
     min-height: 230px;
+  }
+  :hover .arrow {
+    opacity: 1;
   }
 `;
 
@@ -200,6 +143,57 @@ const Slider = styled(motion.div)`
   }
 `;
 
+const ArrowBtn = styled(motion.div)`
+  position: relative;
+  top: 110px;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+`;
+
+const PrevButton = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  padding: 8px;
+  z-index: 999;
+  cursor: pointer;
+  margin-left: 40px;
+  svg {
+    width: 20px;
+    height: 20px;
+    :hover {
+      scale: 1.2;
+      transition: 1s;
+    }
+  }
+  path {
+    stroke-width: 1px;
+    stroke: white;
+  }
+`;
+
+const NextButton = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  padding: 8px;
+  z-index: 999;
+  cursor: pointer;
+  svg {
+    width: 20px;
+    height: 20px;
+    :hover {
+      scale: 1.2;
+      transition: 1s;
+    }
+  }
+`;
+
 const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: #fff;
   width: 260px;
@@ -218,8 +212,6 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
     transform-origin: center right;
     margin-right: 20px;
   }
-  :hover {
-  }
 `;
 
 const Info = styled(motion.div)`
@@ -236,20 +228,18 @@ const Info = styled(motion.div)`
 `;
 
 const rowVariants = {
-  // hidden: (index: number) => {
-  //   x: index++ ? window.outerWidth + 5 : -window.outerWidth - 5;
-  // },
-  hidden: {
-    x: window.outerWidth + 5,
+  hidden: (right: boolean) => {
+    return {
+      x: right ? window.innerWidth : -window.innerWidth,
+    };
   },
   visible: {
     x: 0,
   },
-  // exit: (index: number) => {
-  //   x: index++ ? -window.outerWidth - 5 : window.outerWidth + 5;
-  // },
-  exit: {
-    x: -window.outerWidth - 5,
+  exit: (right: boolean) => {
+    return {
+      x: right ? -window.innerWidth : window.innerWidth,
+    };
   },
 };
 
@@ -259,10 +249,10 @@ const BoxVariants = {
   },
   hover: {
     scale: 1.1,
-    y: -50,
+    y: -30,
     transition: {
       delay: 0.5,
-      duaration: 0.3,
+      duaration: 0.4,
       type: "tween",
     },
   },
