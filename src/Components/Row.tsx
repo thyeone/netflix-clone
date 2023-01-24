@@ -25,12 +25,12 @@ function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
       toggleLeaving();
       setNext(right);
       const totalMovies = data.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      const maxIndex = Math.floor(totalMovies / offset);
 
       right
         ? setIndex((prev) => {
             const result = [...prev];
-            result[rowIndex] >= maxIndex
+            result[rowIndex] === maxIndex
               ? (result[rowIndex] = 0)
               : (result[rowIndex] += 1);
             return result;
@@ -47,22 +47,28 @@ function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
   const toggleLeaving = () => {
     setLeaving((prev) => !prev);
   };
+  /*   useEffect(() => {
+    if (data) {
+      const dataTotalLen = data.results.length;
+      const maxIdx =
+        dataTotalLen % offset === 0
+          ? Math.floor(dataTotalLen / offset) - 1
+          : Math.floor(dataTotalLen / offset);
 
+      if (index[rowIndex] > maxIdx) {
+        setIndex([maxIdx]);
+      }
+    }
+  }, [offset, data, index, setIndex]); */
   return (
     <Wrapper>
       <SilderTitle>{title}</SilderTitle>
       <ArrowBtn>
-        <PrevButton>
-          <LeftOutlined
-            className="arrow"
-            onClick={() => changeIndex(false, rowIndex)}
-          />
+        <PrevButton className="arrow">
+          <LeftOutlined onClick={() => changeIndex(false, rowIndex)} />
         </PrevButton>
-        <NextButton>
-          <RightOutlined
-            className="arrow"
-            onClick={() => changeIndex(true, rowIndex)}
-          />
+        <NextButton className="arrow">
+          <RightOutlined onClick={() => changeIndex(true, rowIndex)} />
         </NextButton>
       </ArrowBtn>
       <AnimatePresence
@@ -71,12 +77,11 @@ function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
         custom={next}
       >
         <Slider
-          custom={next}
           key={index[rowIndex]}
-          variants={rowVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
+          custom={next}
+          initial={{ x: next ? window.outerWidth + 5 : -window.outerWidth - 5 }}
+          animate={{ x: 0 }}
+          exit={{ x: next ? -window.outerWidth - 5 : window.outerWidth + 5 }}
           transition={{ type: "tween", duration: 1 }}
         >
           {data?.results
@@ -106,7 +111,7 @@ function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
   );
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
   position: relative;
   top: -130px;
   min-height: 230px;
@@ -117,6 +122,7 @@ const Wrapper = styled.div`
   }
   :hover .arrow {
     opacity: 1;
+    transition: all 0.5s ease;
   }
 `;
 
@@ -143,7 +149,7 @@ const Slider = styled(motion.div)`
   }
 `;
 
-const ArrowBtn = styled(motion.div)`
+const ArrowBtn = styled.div`
   position: relative;
   top: 110px;
   display: flex;
@@ -161,6 +167,7 @@ const PrevButton = styled(motion.div)`
   z-index: 999;
   cursor: pointer;
   margin-left: 40px;
+  opacity: 0;
   svg {
     width: 20px;
     height: 20px;
@@ -168,31 +175,10 @@ const PrevButton = styled(motion.div)`
       scale: 1.2;
       transition: 1s;
     }
-  }
-  path {
-    stroke-width: 1px;
-    stroke: white;
   }
 `;
 
-const NextButton = styled(motion.div)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 50%;
-  padding: 8px;
-  z-index: 999;
-  cursor: pointer;
-  svg {
-    width: 20px;
-    height: 20px;
-    :hover {
-      scale: 1.2;
-      transition: 1s;
-    }
-  }
-`;
+const NextButton = styled(PrevButton)``;
 
 const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: #fff;
@@ -226,22 +212,6 @@ const Info = styled(motion.div)`
     font-size: 16px;
   }
 `;
-
-const rowVariants = {
-  hidden: (right: boolean) => {
-    return {
-      x: right ? window.innerWidth : -window.innerWidth,
-    };
-  },
-  visible: {
-    x: 0,
-  },
-  exit: (right: boolean) => {
-    return {
-      x: right ? -window.innerWidth : window.innerWidth,
-    };
-  },
-};
 
 const BoxVariants = {
   normal: {
