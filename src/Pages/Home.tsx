@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useMatch, useNavigate } from "react-router-dom";
@@ -12,33 +13,27 @@ const firstRow = 0;
 const secondRow = 1;
 const thirdRow = 2;
 
+const LIST_TYPE = ["nowPlaying", "popularMovies", "topRatedMovies"];
+
 function Home() {
   const { isLoading, data: nowPlaying } = useQuery<IGetMoviesResult>(
-    ["movies", "nowPlaying"],
+    ["movies", LIST_TYPE[0]],
     NowPlaying
   );
   const { data: popularMovies } = useQuery<IGetMoviesResult>(
-    ["movies", "popularMovies"],
+    ["movies", LIST_TYPE[1]],
     PopularMovies
   );
   const { data: topRatedMovies } = useQuery<IGetMoviesResult>(
-    ["movies", "topRatedMovies"],
+    ["movies", LIST_TYPE[2]],
     TopRatedMovies
   );
   const navigate = useNavigate();
-  const movieMatch = useMatch("/movies/:movieId");
 
-  const onBoxClicked = (movieId: number) => {
-    navigate(`/movies/${movieId}`);
+  const onBoxClicked = (id: number, listType: string) => {
+    navigate(`/${listType}/${id}`);
   };
-  const onOverlayClick = () => {
-    navigate(-1);
-  };
-  const clickedMovie =
-    movieMatch?.params.movieId &&
-    nowPlaying?.results.find(
-      (movie) => movie.id === Number(movieMatch.params.movieId)
-    );
+
   return (
     <Wrapper>
       {isLoading ? (
@@ -53,12 +48,14 @@ function Home() {
             title={"Now Playing"}
             data={nowPlaying}
             onBoxClicked={onBoxClicked}
+            listType={LIST_TYPE[0]}
           />
           <Row
             rowIndex={secondRow}
             title={"Trending Now"}
             data={popularMovies}
             onBoxClicked={onBoxClicked}
+            listType={LIST_TYPE[1]}
           />
 
           <Row
@@ -66,11 +63,7 @@ function Home() {
             title={"Top Rated"}
             data={topRatedMovies}
             onBoxClicked={onBoxClicked}
-          />
-          <MovieModal
-            movieMatch={movieMatch}
-            onOverlayClick={onOverlayClick}
-            clickedMovie={clickedMovie}
+            listType={LIST_TYPE[2]}
           />
         </>
       )}
