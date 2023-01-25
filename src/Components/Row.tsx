@@ -1,23 +1,27 @@
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { useMatch } from "react-router-dom";
 import styled from "styled-components";
 import { IGetMoviesResult } from "../typing";
 import { makeImagePath } from "../utils/utils";
+import MovieModal from "./MovieModal";
 
 const offset = 5;
 
 interface IProps {
   data?: IGetMoviesResult;
-  onBoxClicked: (movieId: number) => void;
+  onBoxClicked: (id: number, listType: string) => void;
   title: string;
   rowIndex: number;
+  listType: string;
 }
 
-function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
+function Row({ data, onBoxClicked, title, rowIndex, listType }: IProps) {
   const [index, setIndex] = useState([0, 0, 0]);
   const [leaving, setLeaving] = useState(false);
   const [next, setNext] = useState(true);
+  const movieMatch = useMatch(`/${listType}/:id`);
 
   const changeIndex = (right: boolean, rowIndex: number) => {
     if (data) {
@@ -47,19 +51,7 @@ function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
   const toggleLeaving = () => {
     setLeaving((prev) => !prev);
   };
-  /*   useEffect(() => {
-    if (data) {
-      const dataTotalLen = data.results.length;
-      const maxIdx =
-        dataTotalLen % offset === 0
-          ? Math.floor(dataTotalLen / offset) - 1
-          : Math.floor(dataTotalLen / offset);
 
-      if (index[rowIndex] > maxIdx) {
-        setIndex([maxIdx]);
-      }
-    }
-  }, [offset, data, index, setIndex]); */
   return (
     <Wrapper>
       <SilderTitle>{title}</SilderTitle>
@@ -90,8 +82,8 @@ function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
             .map((movie) => (
               <Box
                 key={movie.id}
-                layoutId={movie.id + rowIndex + ""}
-                onClick={() => onBoxClicked(movie.id)}
+                layoutId={movieMatch?.params.id + listType}
+                onClick={() => onBoxClicked(movie.id, listType)}
                 variants={BoxVariants}
                 whileHover="hover"
                 initial="normal"
@@ -106,6 +98,16 @@ function Row({ data, onBoxClicked, title, rowIndex }: IProps) {
               </Box>
             ))}
         </Slider>
+      </AnimatePresence>
+      <AnimatePresence>
+        {movieMatch ? (
+          <MovieModal
+            movieMatch={movieMatch}
+            movieId={Number(movieMatch?.params.id)}
+            listType={listType}
+            rowIndex={rowIndex}
+          />
+        ) : null}
       </AnimatePresence>
     </Wrapper>
   );

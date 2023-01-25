@@ -1,47 +1,54 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { PathMatch } from "react-router-dom";
+import { useQuery } from "react-query";
+import { PathMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IMovie } from "../typing";
+import { IMovieDetail } from "../typing";
+import { GetMovieDetail } from "../utils/api";
 import { makeImagePath } from "../utils/utils";
 
 interface IProps {
-  movieMatch: PathMatch<"movieId"> | null;
-  onOverlayClick: () => void;
-  clickedMovie: "" | IMovie | undefined;
+  movieMatch: PathMatch<"id">;
+  movieId: number;
+  listType: string;
+  rowIndex: number;
 }
 
-function MovieModal({ movieMatch, onOverlayClick, clickedMovie }: IProps) {
+function MovieModal({ movieMatch, movieId, listType, rowIndex }: IProps) {
+  const { data } = useQuery<IMovieDetail>(["movie"], () =>
+    GetMovieDetail(movieId)
+  );
+  const navigate = useNavigate();
+  const onOverlayClick = () => {
+    navigate(-1);
+  };
+
   return (
-    <AnimatePresence>
-      {movieMatch ? (
-        <>
-          <Overlay
-            variants={overlayVariants}
-            onClick={onOverlayClick}
-            initial="hidden"
-            exit="exit"
-            animate="visible"
-          />
-          <MovieDetail layoutId={movieMatch.params.movieId}>
-            {clickedMovie && (
-              <>
-                <div
-                  className="detail_image"
-                  style={{
-                    backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                      clickedMovie.backdrop_path || clickedMovie.poster_path,
-                      "w500"
-                    )})`,
-                  }}
-                />
-                <h3 className="detail_title">{clickedMovie.title}</h3>
-                <p className="detail_overview">{clickedMovie.overview}</p>
-              </>
-            )}
-          </MovieDetail>
-        </>
-      ) : null}
-    </AnimatePresence>
+    <>
+      <Overlay
+        variants={overlayVariants}
+        onClick={onOverlayClick}
+        initial="hidden"
+        exit="exit"
+        animate="visible"
+      />
+      <MovieDetail layoutId={movieId + listType}>
+        {
+          <>
+            <div
+              className="detail_image"
+              style={{
+                backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                  data?.backdrop_path || "",
+                  "w500"
+                )})`,
+              }}
+            />
+            <h3 className="detail_title">{data?.title}</h3>
+            <p className="detail_overview">{data?.overview}</p>
+          </>
+        }
+      </MovieDetail>
+    </>
   );
 }
 

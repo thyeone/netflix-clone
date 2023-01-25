@@ -28,3 +28,20 @@ export interface IGetMoviesResult {
   total_pages: number;
   total_result: number;
 }
+
+export interface IMovieDetail {
+  backdrop_path: string;
+  poster_path: string;
+  genres: [{ id: number; name: string }];
+  id: number;
+  string: string;
+  original_title: string;
+  overview: string;
+  poster_path: string;
+  release_date: string;
+  runtime: number;
+  tagline: string;
+  title: string;
+  vote_average: number;
+  sucess: boolean;
+}
