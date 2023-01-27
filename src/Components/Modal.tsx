@@ -17,7 +17,7 @@ interface IProps {
 const API_KEY = "ba621a4e36b9c325838cdc6720823931";
 const BASE_PATH = "https://api.themoviedb.org/3/";
 
-function MovieModal({ movieId, listType }: IProps) {
+function Modal({ movieId, listType }: IProps) {
   const [trailer, setTrailer] = useState("");
   const { data: movieDetail } = useQuery<IMovieDetail>(
     ["movie", listType],
@@ -185,4 +185,4 @@ const overlayVariants = {
   exit: { opacity: 0 },
 };
 
-export default MovieModal;
+export default Modal;

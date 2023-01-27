@@ -5,7 +5,7 @@ import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IGetMoviesResult } from "../typing";
 import { makeImagePath } from "../utils/utils";
-import MovieModal from "./MovieModal";
+import Modal from "./Modal";
 
 const offset = 5;
 
@@ -105,7 +105,7 @@ function Row({ data, title, rowIndex, listType }: IProps) {
       </AnimatePresence>
       <AnimatePresence>
         {movieMatch ? (
-          <MovieModal
+          <Modal
             movieMatch={movieMatch}
             movieId={Number(movieMatch?.params.id)}
             listType={listType}
@@ -118,7 +118,7 @@ function Row({ data, title, rowIndex, listType }: IProps) {
 
 const Wrapper = styled(motion.div)`
   position: relative;
-  top: -130px;
+  top: -160px;
   min-height: 230px;
   overflow-x: hidden;
   @media screen and (min-width: 1920px) {

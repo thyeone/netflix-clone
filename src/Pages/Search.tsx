@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { IGetMoviesResult } from "../typing";
 import { SearchMovies } from "../utils/api";
 import { makeImagePath } from "../utils/utils";
-import MovieModal from "../Components/MovieModal";
+import Modal from "../Components/Modal";
 
 const offset = 6;
 let row = 0;
@@ -65,7 +65,7 @@ function Search() {
       )}
       <AnimatePresence>
         {movieMatch ? (
-          <MovieModal
+          <Modal
             movieMatch={movieMatch}
             movieId={Number(movieMatch?.params.id)}
             listType={movieMatch?.params.listType || ""}
