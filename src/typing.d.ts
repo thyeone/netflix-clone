@@ -19,7 +19,7 @@ export interface IMovie {
 }
 
 export interface IGetMoviesResult {
-  dates: {
+  dates?: {
     maximum: string;
     minimum: string;
   };

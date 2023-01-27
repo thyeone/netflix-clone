@@ -21,7 +21,10 @@ function Banner({ nowPlaying }: IProps) {
       bgPhoto={makeImagePath(nowPlaying?.results[0].backdrop_path || "")}
     >
       <div className="top">
-        <Title>{nowPlaying?.results[0].original_title}</Title>
+        <Title>
+          {nowPlaying?.results[0].original_title ||
+            nowPlaying?.results[0].original_name}
+        </Title>
         <Overview>
           {nowPlaying && nowPlaying?.results[0].overview.length > 160
             ? nowPlaying?.results[0].overview.slice(0, 160) + "..."

@@ -80,27 +80,54 @@ function Row({ data, title, rowIndex, listType }: IProps) {
           exit={{ x: next ? -window.outerWidth - 5 : window.outerWidth + 5 }}
           transition={{ type: "tween", duration: 1 }}
         >
-          {data?.results
-            .slice(1)
-            .slice(offset * index[rowIndex], offset * index[rowIndex] + offset)
-            .map((movie) => (
-              <Box
-                key={movie.id}
-                layoutId={movie.id + listType}
-                onClick={() => onBoxClicked(movie.id, listType)}
-                variants={BoxVariants}
-                whileHover="hover"
-                initial="normal"
-                bgphoto={makeImagePath(
-                  movie.backdrop_path || movie.poster_path,
-                  "w500"
-                )}
-              >
-                <Info variants={infoVariants}>
-                  <h4>{movie.title}</h4>
-                </Info>
-              </Box>
-            ))}
+          {rowIndex === 0
+            ? data?.results
+                .slice(1)
+                .slice(
+                  offset * index[rowIndex],
+                  offset * index[rowIndex] + offset
+                )
+                .map((movie) => (
+                  <Box
+                    key={movie.id}
+                    layoutId={movie.id + listType}
+                    onClick={() => onBoxClicked(movie.id, listType)}
+                    variants={BoxVariants}
+                    whileHover="hover"
+                    initial="normal"
+                    bgphoto={makeImagePath(
+                      movie.backdrop_path || movie.poster_path,
+                      "w500"
+                    )}
+                  >
+                    <Info variants={infoVariants}>
+                      <h4>{movie.title}</h4>
+                    </Info>
+                  </Box>
+                ))
+            : data?.results
+                .slice(
+                  offset * index[rowIndex],
+                  offset * index[rowIndex] + offset
+                )
+                .map((movie) => (
+                  <Box
+                    key={movie.id}
+                    layoutId={movie.id + listType}
+                    onClick={() => onBoxClicked(movie.id, listType)}
+                    variants={BoxVariants}
+                    whileHover="hover"
+                    initial="normal"
+                    bgphoto={makeImagePath(
+                      movie.backdrop_path || movie.poster_path,
+                      "w500"
+                    )}
+                  >
+                    <Info variants={infoVariants}>
+                      <h4>{movie.title}</h4>
+                    </Info>
+                  </Box>
+                ))}
         </Slider>
       </AnimatePresence>
       <AnimatePresence>
