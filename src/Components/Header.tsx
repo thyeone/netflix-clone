@@ -11,7 +11,6 @@ interface IForm {
 const Header = () => {
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const [search, setSearch] = useState(false);
-  const navigate = useNavigate();
   const homeMatch = useMatch("/");
   const tvMatch = useMatch("/tv");
   const inputAnimation = useAnimation();

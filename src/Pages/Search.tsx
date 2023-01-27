@@ -1,16 +1,16 @@
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useQuery } from "react-query";
 import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IGetMoviesResult } from "../typing";
 import { SearchMovies } from "../utils/api";
 import { makeImagePath } from "../utils/utils";
+import MovieModal from "../Components/MovieModal";
 
 const offset = 6;
-let n = 0;
+let row = 0;
 for (let i = 0; i < 999; i++) {
-  n = i;
+  row = i;
 }
 
 function Search() {
@@ -18,33 +18,13 @@ function Search() {
     SearchMovies(keyword)
   );
   const navigate = useNavigate();
-  const movieMatch = useMatch("/movies/:movieId");
 
-  const [index, setIndex] = useState(0);
-  const [leaving, setLeaving] = useState(false);
-  const increaseIndex = () => {
-    if (data) {
-      if (leaving) return;
-      toggleLeaving();
-      const totalMovies = data.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
-      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-    }
+  const movieMatch = useMatch(`/search/:listType/:id`);
+
+  const onBoxClicked = (id: number, listType: string) => {
+    navigate(`/search/${listType}/${id}`);
   };
-  const toggleLeaving = () => {
-    setLeaving((prev) => !prev);
-  };
-  const onBoxClicked = (movieId: number) => {
-    navigate(`/movies/${movieId}`);
-  };
-  const onOverlayClick = () => {
-    navigate(-1);
-  };
-  const clickedMovie =
-    movieMatch?.params.movieId &&
-    data?.results.find(
-      (movie) => movie.id === Number(movieMatch.params.movieId)
-    );
+
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
 
@@ -61,13 +41,19 @@ function Search() {
                 movie.backdrop_path && (
                   <Box
                     key={movie.id}
-                    n={n}
+                    onClick={() => onBoxClicked(movie.id, movie.media_type)}
+                    layoutId={movie.id + movie.media_type}
+                    n={row}
                     offset={offset}
                     variants={BoxVariants}
                     whileHover="hover"
                     initial="normal"
                     bgphoto={makeImagePath(movie.backdrop_path || "", "w500")}
-                  />
+                  >
+                    <Info variants={infoVariants}>
+                      <h4>{movie.title}</h4>
+                    </Info>
+                  </Box>
                 )
             )}
           </Row>
@@ -77,6 +63,15 @@ function Search() {
           입력하신 검색어 "{keyword}"(와)과 일치하는 결과가 없습니다.
         </NoResultMessage>
       )}
+      <AnimatePresence>
+        {movieMatch ? (
+          <MovieModal
+            movieMatch={movieMatch}
+            movieId={Number(movieMatch?.params.id)}
+            listType={movieMatch?.params.listType || ""}
+          />
+        ) : null}
+      </AnimatePresence>
     </Wrapper>
   );
 }
@@ -128,6 +123,19 @@ const Box = styled(motion.div)<{ bgphoto: string; offset: number; n: number }>`
   }
 `;
 
+const Info = styled(motion.div)`
+  position: absolute;
+  padding: 10px;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
+  width: 100%;
+  bottom: 0;
+  h4 {
+    text-align: center;
+    font-size: 16px;
+  }
+`;
+
 const rowVariants = {
   hidden: {
     x: window.outerWidth + 5,
@@ -144,7 +152,7 @@ const BoxVariants = {
   },
   hover: {
     scale: 1.1,
-    y: -50,
+    y: -30,
     transition: {
       delay: 0.5,
       duaration: 0.3,

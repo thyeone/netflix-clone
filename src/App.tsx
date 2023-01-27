@@ -13,6 +13,7 @@ function App() {
         <Route path="/:listType/:id" element={<Home />} />
         <Route path="/tv" element={<Tv />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/search/:listType/:id" element={<Search />} />
       </Routes>
     </BrowserRouter>
   );

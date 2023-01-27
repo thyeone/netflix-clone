@@ -1,10 +1,6 @@
-import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
 import { useQuery } from "react-query";
-import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Banner from "../Components/Banner";
-import MovieModal from "../Components/MovieModal";
 import Row from "../Components/Row";
 import { IGetMoviesResult } from "../typing";
 import { NowPlaying, PopularMovies, TopRatedMovies } from "../utils/api";
@@ -28,11 +24,6 @@ function Home() {
     ["movies", LIST_TYPE[2]],
     TopRatedMovies
   );
-  const navigate = useNavigate();
-
-  const onBoxClicked = (id: number, listType: string) => {
-    navigate(`/${listType}/${id}`);
-  };
 
   return (
     <Wrapper>
@@ -47,22 +38,18 @@ function Home() {
             rowIndex={firstRow}
             title={"Now Playing"}
             data={nowPlaying}
-            onBoxClicked={onBoxClicked}
             listType={LIST_TYPE[0]}
           />
           <Row
             rowIndex={secondRow}
             title={"Trending Now"}
             data={popularMovies}
-            onBoxClicked={onBoxClicked}
             listType={LIST_TYPE[1]}
           />
-
           <Row
             rowIndex={thirdRow}
             title={"Top Rated"}
             data={topRatedMovies}
-            onBoxClicked={onBoxClicked}
             listType={LIST_TYPE[2]}
           />
         </>

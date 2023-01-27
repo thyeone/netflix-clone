@@ -37,7 +37,7 @@ const Title = styled.h2`
 const Overview = styled.p`
   font-size: 20px;
   font-weight: 300;
-  line-height: 25px;
+  line-height: 30px;
   width: 50%;
 `;
 

@@ -12,12 +12,10 @@ interface IProps {
   movieMatch: PathMatch<"id">;
   movieId: number;
   listType: string;
-  rowIndex: number;
 }
 
 const API_KEY = "ba621a4e36b9c325838cdc6720823931";
 const BASE_PATH = "https://api.themoviedb.org/3/";
-const LANGUAGE = "ko-KR";
 
 function MovieModal({ movieId, listType }: IProps) {
   const [trailer, setTrailer] = useState("");
@@ -106,7 +104,6 @@ function MovieModal({ movieId, listType }: IProps) {
 }
 
 const MovieYouTube = styled.div`
-  /* position: absolute; */
   width: 100%;
   height: 70%;
 `;
@@ -147,12 +144,8 @@ const MovieContents = styled.div`
     flex-direction: row;
   }
   .right-contents {
-    margin-top: -10px;
-    margin-left: 50px;
+    margin: -10px 10px 0 50px;
     line-height: 30px;
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* display: block; */
   }
   .release_date {
     margin-left: 10px;
@@ -175,7 +168,7 @@ const MovieContents = styled.div`
     width: 65%;
     color: ${(props) => props.theme.white.lighter};
     margin-bottom: 30px;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 300;
     line-height: 25px;
   }
