@@ -1,10 +1,12 @@
-import { AnimatePresence, motion } from "framer-motion";
+import axios from "axios";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import ReactPlayer from "react-player";
 import { useQuery } from "react-query";
 import { PathMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IMovieDetail } from "../typing";
+import { Element, IMovieDetail } from "../typing";
 import { GetMovieDetail } from "../utils/api";
-import { makeImagePath } from "../utils/utils";
 
 interface IProps {
   movieMatch: PathMatch<"id">;
@@ -13,14 +15,36 @@ interface IProps {
   rowIndex: number;
 }
 
-function MovieModal({ movieMatch, movieId, listType, rowIndex }: IProps) {
-  const { data } = useQuery<IMovieDetail>(["movie"], () =>
-    GetMovieDetail(movieId)
+const API_KEY = "ba621a4e36b9c325838cdc6720823931";
+const BASE_PATH = "https://api.themoviedb.org/3/";
+const LANGUAGE = "ko-KR";
+
+function MovieModal({ movieId, listType }: IProps) {
+  const [trailer, setTrailer] = useState("");
+  const { data: movieDetail } = useQuery<IMovieDetail>(
+    ["movie", listType],
+    () => GetMovieDetail(movieId)
   );
+
   const navigate = useNavigate();
   const onOverlayClick = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    async function getVideo() {
+      const data = await axios(
+        `${BASE_PATH}movie/${movieId}/videos?api_key=${API_KEY}&language=en-US`
+      ).then((response) => response.data);
+      if (data) {
+        const index = data?.results.findIndex(
+          (element: Element) => element.type === "Trailer"
+        );
+        setTrailer(data?.results[index]?.key);
+      }
+    }
+    getVideo();
+  }, []);
 
   return (
     <>
@@ -34,23 +58,58 @@ function MovieModal({ movieMatch, movieId, listType, rowIndex }: IProps) {
       <MovieDetail layoutId={movieId + listType}>
         {
           <>
-            <div
-              className="detail_image"
-              style={{
-                backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                  data?.backdrop_path || "",
-                  "w500"
-                )})`,
-              }}
-            />
-            <h3 className="detail_title">{data?.title}</h3>
-            <p className="detail_overview">{data?.overview}</p>
+            <MovieYouTube>
+              <ReactPlayer
+                className="react-player"
+                width="100%"
+                height="100%"
+                url={`https://www.youtube.com/embed/${trailer}`}
+                playing={true}
+                muted={true}
+              />
+            </MovieYouTube>
+            <MovieContents>
+              <div className="top-contents">
+                <span className="vote_average">
+                  {Math.floor(movieDetail?.vote_average * 10)}% Match
+                </span>
+                <span className="release_date">
+                  {movieDetail?.release_date}
+                </span>
+                <span className="hd">HD</span>
+              </div>
+              <div className="space-between-contents">
+                <p className="detail_overview">{movieDetail?.overview}</p>
+                <div className="right-contents">
+                  <div>
+                    <span className="gray">Genres:</span>{" "}
+                    {movieDetail?.genres
+                      .map((genres) => genres.name)
+                      .join(", ")}
+                  </div>
+                  <div>
+                    <span className="gray">Original language:</span>{" "}
+                    {movieDetail?.original_language}
+                  </div>
+                  <div>
+                    <span className="gray">Total Votes:</span>{" "}
+                    {movieDetail?.vote_count}
+                  </div>
+                </div>
+              </div>
+            </MovieContents>
           </>
         }
       </MovieDetail>
     </>
   );
 }
+
+const MovieYouTube = styled.div`
+  /* position: absolute; */
+  width: 100%;
+  height: 70%;
+`;
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -63,34 +122,67 @@ const Overlay = styled(motion.div)`
 
 const MovieDetail = styled(motion.div)`
   position: fixed;
-  width: 40vw;
-  height: 80vh;
+  width: 70vw;
+  height: 95vh;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   margin: auto;
   border-radius: 6px;
-  overflow: hidden;
-  background-color: ${(props) => props.theme.black.lighter};
-  .detail_image {
-    background-size: cover;
-    background-position: center center;
-    width: 100%;
-    height: 400px;
+  overflow-y: scroll;
+  z-index: 999;
+  background-color: ${(props) => props.theme.black.darker};
+`;
+
+const MovieContents = styled.div`
+  position: absolute;
+  padding-left: 40px;
+  .top-contents {
+    margin: 30px 0;
   }
-  .detail_title {
-    color: ${(props) => props.theme.white.lighter};
-    padding: 20px;
-    font-size: 38px;
-    position: relative;
-    top: -70px;
+
+  .space-between-contents {
+    display: flex;
+    flex-direction: row;
+  }
+  .right-contents {
+    margin-top: -10px;
+    margin-left: 50px;
+    line-height: 30px;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* display: block; */
+  }
+  .release_date {
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: 300;
+  }
+  .vote_average {
+    color: #4ade80;
+    font-weight: 600;
+  }
+  .hd {
+    margin-left: 8px;
+    padding: 0px 6px;
+    background-color: ${(props) => props.theme.black.darker};
+    border-radius: 5px;
+    border: 1px solid white;
+    font-size: 13px;
   }
   .detail_overview {
-    position: relative;
-    top: -20px;
+    width: 65%;
     color: ${(props) => props.theme.white.lighter};
-    padding: 0 20px;
+    margin-bottom: 30px;
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 25px;
+  }
+  .gray {
+    color: #808080;
+    font-size: 14px;
+    margin: 10px 0;
   }
 `;
 

@@ -36,12 +36,24 @@ export interface IMovieDetail {
   id: number;
   string: string;
   original_title: string;
+  original_language: string;
   overview: string;
   poster_path: string;
   release_date: string;
   runtime: number;
   tagline: string;
   title: string;
-  vote_average: number;
+  vote_average: number | *;
+  vote_count: number;
   sucess: boolean;
+}
+
+export interface Element {
+  type:
+    | "Bloopers"
+    | "Featurette"
+    | "Behind the Scenes"
+    | "Clip"
+    | "Trailer"
+    | "Teaser";
 }

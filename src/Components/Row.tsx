@@ -82,7 +82,7 @@ function Row({ data, onBoxClicked, title, rowIndex, listType }: IProps) {
             .map((movie) => (
               <Box
                 key={movie.id}
-                layoutId={movieMatch?.params.id + listType}
+                layoutId={movie.id + listType}
                 onClick={() => onBoxClicked(movie.id, listType)}
                 variants={BoxVariants}
                 whileHover="hover"
