@@ -216,10 +216,10 @@ const NextButton = styled(PrevButton)``;
 
 const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: #fff;
-  width: 260px;
-  height: 144px;
-  border-radius: 5px;
-  font-size: 16px;
+  width: 16.25rem;
+  height: 9rem;
+  border-radius: 0.3rem;
+  font-size: 1rem;
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
