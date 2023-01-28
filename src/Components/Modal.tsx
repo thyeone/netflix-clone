@@ -6,22 +6,27 @@ import { useQuery } from "react-query";
 import { PathMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Element, IMovieDetail } from "../typing";
-import { GetMovieDetail } from "../utils/api";
+import { GetMovieDetail, GetTvDetail } from "../utils/api";
 
 interface IProps {
   movieMatch: PathMatch<"id">;
   movieId: number;
   listType: string;
+  kind?: string;
 }
 
 const API_KEY = "ba621a4e36b9c325838cdc6720823931";
 const BASE_PATH = "https://api.themoviedb.org/3/";
 
-function Modal({ movieId, listType }: IProps) {
+function Modal({ movieId, listType, kind }: IProps) {
   const [trailer, setTrailer] = useState("");
   const { data: movieDetail } = useQuery<IMovieDetail>(
     ["movie", listType],
     () => GetMovieDetail(movieId)
+  );
+
+  const { data: tvDetail } = useQuery<IMovieDetail>(["tv", listType], () =>
+    GetTvDetail(movieId)
   );
 
   const navigate = useNavigate();
@@ -29,19 +34,32 @@ function Modal({ movieId, listType }: IProps) {
     navigate(-1);
   };
 
-  useEffect(() => {
-    async function getVideo() {
-      const data = await axios(
-        `${BASE_PATH}movie/${movieId}/videos?api_key=${API_KEY}&language=en-US`
-      ).then((response) => response.data);
-      if (data) {
-        const index = data?.results.findIndex(
-          (element: Element) => element.type === "Trailer"
-        );
-        setTrailer(data?.results[index]?.key);
-      }
+  const getMovieVideo = async () => {
+    const data = await axios(
+      `${BASE_PATH}${kind}/${movieId}/videos?api_key=${API_KEY}&language=en-US`
+    ).then((response) => response.data);
+    if (data) {
+      const index = data?.results.findIndex(
+        (element: Element) => element.type === "Trailer"
+      );
+      setTrailer(data?.results[index]?.key);
     }
-    getVideo();
+  };
+
+  const getTvVideo = async () => {
+    const data = await axios(
+      `${BASE_PATH}${kind}/${movieId}/videos?api_key=${API_KEY}&language=en-US`
+    ).then((response) => response.data);
+    if (data) {
+      const index = data?.results.findIndex(
+        (element: Element) => element.type === "Trailer"
+      );
+      setTrailer(data?.results[index]?.key);
+    }
+  };
+
+  useEffect(() => {
+    kind === "movie" ? getMovieVideo() : getTvVideo();
   }, []);
 
   return (
@@ -56,46 +74,77 @@ function Modal({ movieId, listType }: IProps) {
       <MovieDetail layoutId={movieId + listType}>
         {
           <>
-            <MovieYouTube>
-              <ReactPlayer
-                className="react-player"
-                width="100%"
-                height="100%"
-                url={`https://www.youtube.com/embed/${trailer}`}
-                playing={true}
-                muted={true}
-              />
-            </MovieYouTube>
-            <MovieContents>
-              <div className="top-contents">
-                <span className="vote_average">
-                  {Math.floor(movieDetail?.vote_average * 10)}% Match
-                </span>
-                <span className="release_date">
-                  {movieDetail?.release_date}
-                </span>
-                <span className="hd">HD</span>
-              </div>
-              <div className="space-between-contents">
-                <p className="detail_overview">{movieDetail?.overview}</p>
-                <div className="right-contents">
-                  <div>
-                    <span className="gray">Genres:</span>{" "}
-                    {movieDetail?.genres
-                      .map((genres) => genres.name)
-                      .join(", ")}
-                  </div>
-                  <div>
-                    <span className="gray">Original language:</span>{" "}
-                    {movieDetail?.original_language}
-                  </div>
-                  <div>
-                    <span className="gray">Total Votes:</span>{" "}
-                    {movieDetail?.vote_count}
+            {
+              <MovieYouTube>
+                <ReactPlayer
+                  className="react-player"
+                  width="100%"
+                  height="100%"
+                  url={`https://www.youtube.com/embed/${trailer}`}
+                  playing={true}
+                  muted={true}
+                />
+              </MovieYouTube>
+            }
+            {kind === "movie" ? (
+              <MovieContents>
+                <div className="top-contents">
+                  <span className="vote_average">
+                    {Math.floor(movieDetail?.vote_average * 10)}% Match
+                  </span>
+                  <span className="release_date">
+                    {movieDetail?.release_date}
+                  </span>
+                  <span className="hd">HD</span>
+                </div>
+                <div className="space-between-contents">
+                  <p className="detail_overview">{movieDetail?.overview}</p>
+                  <div className="right-contents">
+                    <div>
+                      <span className="gray">Genres:</span>{" "}
+                      {movieDetail?.genres
+                        .map((genres) => genres.name)
+                        .join(", ")}
+                    </div>
+                    <div>
+                      <span className="gray">Original language:</span>{" "}
+                      {movieDetail?.original_language}
+                    </div>
+                    <div>
+                      <span className="gray">Total Votes:</span>{" "}
+                      {movieDetail?.vote_count}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </MovieContents>
+              </MovieContents>
+            ) : (
+              <MovieContents>
+                <div className="top-contents">
+                  <span className="vote_average">
+                    {Math.floor(tvDetail?.vote_average * 10)}% Match
+                  </span>
+                  <span className="release_date">{tvDetail?.release_date}</span>
+                  <span className="hd">HD</span>
+                </div>
+                <div className="space-between-contents">
+                  <p className="detail_overview">{tvDetail?.overview}</p>
+                  <div className="right-contents">
+                    <div>
+                      <span className="gray">Genres:</span>{" "}
+                      {tvDetail?.genres.map((genres) => genres.name).join(", ")}
+                    </div>
+                    <div>
+                      <span className="gray">Original language:</span>{" "}
+                      {tvDetail?.original_language}
+                    </div>
+                    <div>
+                      <span className="gray">Total Votes:</span>{" "}
+                      {tvDetail?.vote_count}
+                    </div>
+                  </div>
+                </div>
+              </MovieContents>
+            )}
           </>
         }
       </MovieDetail>

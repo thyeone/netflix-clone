@@ -11,11 +11,12 @@ import {
   TopRatedTv,
 } from "../utils/api";
 
+const kind = "tv";
 const firstRow = 0;
 const secondRow = 1;
 const thirdRow = 2;
 
-const LIST_TYPE = ["nowPlaying", "popularMovies", "topRatedMovies"];
+const LIST_TYPE = ["PopularTvShows", "TopRatedTvShows"];
 
 function Tv() {
   const { isLoading, data: popularTv } = useQuery<IGetMoviesResult>(
@@ -36,25 +37,21 @@ function Tv() {
         </Loader>
       ) : (
         <>
-          <Banner nowPlaying={popularTv} />
+          <Banner nowPlaying={popularTv} listType={LIST_TYPE[0]} kind={kind} />
           <Row
             rowIndex={firstRow}
             title={"Trending Now"}
             data={popularTv}
             listType={LIST_TYPE[0]}
+            kind={kind}
           />
           <Row
             rowIndex={secondRow}
             title={"Top Rated"}
             data={topRatedTv}
             listType={LIST_TYPE[1]}
+            kind={kind}
           />
-          {/* <Row
-            rowIndex={secondRow}
-            title={"Now Playing"}
-            data={nowPlaying}
-            listType={LIST_TYPE[2]}
-          /> */}
         </>
       )}
     </Wrapper>

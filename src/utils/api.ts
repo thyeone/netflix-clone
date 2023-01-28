@@ -33,7 +33,7 @@ export const GetMovieDetail = async (movieId: number) => {
 
 export const SearchMovies = async (keyword: string | null) => {
   return await axios(
-    `${BASE_PATH}search/multi?api_key=${API_KEY}&language=en-US&query=${keyword}&page=1&include_adult=false`
+    `${BASE_PATH}search/multi?api_key=${API_KEY}&language=en-US&query=${keyword}&page=1&include_adult=true`
   ).then((response) => response.data);
 };
 
@@ -47,6 +47,12 @@ export const PopularTv = async () => {
 
 export const TopRatedTv = async () => {
   return await axios(
-    `https://api.themoviedb.org/3/tv/top_rated?api_key=ba621a4e36b9c325838cdc6720823931&language=en-US`
+    `${BASE_PATH}/tv/top_rated?api_key=${API_KEY}&language=en-US`
+  ).then((response) => response.data);
+};
+
+export const GetTvDetail = async (movieId: number) => {
+  return await axios(
+    `${BASE_PATH}tv/${movieId}?api_key=${API_KEY}&language=en-US`
   ).then((response) => response.data);
 };

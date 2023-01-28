@@ -7,14 +7,16 @@ import Modal from "./Modal";
 
 interface IProps {
   nowPlaying?: IGetMoviesResult;
+  listType: string;
+  kind: string;
 }
 
-function Banner({ nowPlaying }: IProps) {
+function Banner({ nowPlaying, listType, kind }: IProps) {
   const navigate = useNavigate();
-  const movieMatch = useMatch(`/:listType/:id`);
+  const movieMatch = useMatch(`${kind}/${listType}/:id`);
 
   const onBoxClicked = (id?: number, listType?: string) => {
-    navigate(`/${listType}/${id}`);
+    navigate(`/${kind}/${listType}/${id}`);
   };
   return (
     <Wrapper
@@ -46,12 +48,7 @@ function Banner({ nowPlaying }: IProps) {
             Play
           </PlayButton>
           <MoreInfo
-            onClick={() =>
-              onBoxClicked(
-                nowPlaying?.results[0].id,
-                nowPlaying?.results[0].media_type
-              )
-            }
+            onClick={() => onBoxClicked(nowPlaying?.results[0].id, listType)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +71,7 @@ function Banner({ nowPlaying }: IProps) {
           <Modal
             movieMatch={movieMatch}
             movieId={Number(movieMatch?.params.id)}
-            listType={movieMatch?.params.listType || ""}
+            listType={listType || ""}
           />
         ) : null}
       </AnimatePresence>

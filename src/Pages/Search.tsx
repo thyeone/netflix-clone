@@ -6,6 +6,7 @@ import { IGetMoviesResult } from "../typing";
 import { SearchMovies } from "../utils/api";
 import { makeImagePath } from "../utils/utils";
 import Modal from "../Components/Modal";
+import { useEffect, useState } from "react";
 
 const offset = 6;
 let row = 0;
@@ -14,6 +15,7 @@ for (let i = 0; i < 999; i++) {
 }
 
 function Search() {
+  const [word, setWord] = useState("");
   const { isLoading, data } = useQuery<IGetMoviesResult>(["search"], () =>
     SearchMovies(keyword)
   );
@@ -27,14 +29,21 @@ function Search() {
 
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
-
+  const getKeyword = () => {
+    if (keyword) {
+      setWord(keyword);
+    }
+  };
+  useEffect(() => {
+    getKeyword();
+  });
   return isLoading ? (
     <span>Loading ...</span>
   ) : (
     <Wrapper>
       {data && data?.results.length > 0 ? (
         <>
-          <ResultKeyword>'{keyword}'로 검색한 결과입니다.</ResultKeyword>
+          <ResultKeyword>'{word}'로 검색한 결과입니다.</ResultKeyword>
           <Row variants={rowVariants}>
             {data?.results.map(
               (movie) =>
@@ -104,6 +113,7 @@ const Row = styled(motion.div)`
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   width: 100%;
+  overflow: hidden;
 `;
 
 const Box = styled(motion.div)<{ bgphoto: string; offset: number; n: number }>`

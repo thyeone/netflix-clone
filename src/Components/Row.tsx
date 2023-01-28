@@ -14,17 +14,18 @@ interface IProps {
   title: string;
   rowIndex: number;
   listType: string;
+  kind: string;
 }
 
-function Row({ data, title, rowIndex, listType }: IProps) {
+function Row({ data, title, rowIndex, listType, kind }: IProps) {
   const [index, setIndex] = useState([0, 0, 0]);
   const [leaving, setLeaving] = useState(false);
   const [next, setNext] = useState(true);
-  const movieMatch = useMatch(`/${listType}/:id`);
+  const movieMatch = useMatch(`${kind}/${listType}/:id`);
   const navigate = useNavigate();
 
   const onBoxClicked = (id: number, listType: string) => {
-    navigate(`/${listType}/${id}`);
+    navigate(`/${kind}/${listType}/${id}`);
   };
 
   const changeIndex = (right: boolean, rowIndex: number) => {
@@ -136,6 +137,7 @@ function Row({ data, title, rowIndex, listType }: IProps) {
             movieMatch={movieMatch}
             movieId={Number(movieMatch?.params.id)}
             listType={listType}
+            kind={kind}
           />
         ) : null}
       </AnimatePresence>
