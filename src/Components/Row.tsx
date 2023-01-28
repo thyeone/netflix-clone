@@ -7,7 +7,8 @@ import { IGetMoviesResult } from "../typing";
 import { makeImagePath } from "../utils/utils";
 import Modal from "./Modal";
 
-const offset = 5;
+const offset = 6;
+const newOffset = offset - 1;
 
 interface IProps {
   data?: IGetMoviesResult;
@@ -76,17 +77,23 @@ function Row({ data, title, rowIndex, listType, kind }: IProps) {
         <Slider
           key={index[rowIndex]}
           custom={next}
-          initial={{ x: next ? window.outerWidth + 5 : -window.outerWidth - 5 }}
-          animate={{ x: 0 }}
-          exit={{ x: next ? -window.outerWidth - 5 : window.outerWidth + 5 }}
-          transition={{ type: "tween", duration: 1 }}
+          initial={{
+            x: next ? window.outerWidth + 5 : -window.outerWidth - 5,
+          }}
+          animate={{
+            x: 0,
+          }}
+          exit={{
+            x: next ? -window.outerWidth - 5 : window.outerWidth + 5,
+          }}
+          transition={{ type: "tween", duration: 0.7 }}
         >
           {rowIndex === 0
             ? data?.results
                 .slice(1)
                 .slice(
-                  offset * index[rowIndex],
-                  offset * index[rowIndex] + offset
+                  newOffset * index[rowIndex],
+                  newOffset * index[rowIndex] + newOffset + 1
                 )
                 .map((movie) => (
                   <Box
@@ -108,8 +115,8 @@ function Row({ data, title, rowIndex, listType, kind }: IProps) {
                 ))
             : data?.results
                 .slice(
-                  offset * index[rowIndex],
-                  offset * index[rowIndex] + offset
+                  newOffset * index[rowIndex],
+                  newOffset * index[rowIndex] + newOffset + 1
                 )
                 .map((movie) => (
                   <Box
@@ -170,17 +177,10 @@ const SilderTitle = styled.h2`
 const Slider = styled(motion.div)`
   position: absolute;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 10px;
   width: 100%;
   overflow: hidden;
-  @media screen and (min-width: 1920px) {
-    position: absolute;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    width: 100%;
-    overflow: hidden;
-  }
 `;
 
 const ArrowBtn = styled.div`
@@ -231,6 +231,11 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   &:last-child {
     transform-origin: center right;
     margin-right: 20px;
+  }
+  @media screen and (min-width: 1920px) {
+    &:first-child {
+      margin-right: 50px;
+    }
   }
 `;
 

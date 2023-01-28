@@ -3,18 +3,11 @@ import styled from "styled-components";
 import Banner from "../Components/Banner";
 import Row from "../Components/Row";
 import { IGetMoviesResult } from "../typing";
-import {
-  NowPlaying,
-  PopularMovies,
-  PopularTv,
-  TopRatedMovies,
-  TopRatedTv,
-} from "../utils/api";
+import { PopularTv, TopRatedTv } from "../utils/api";
 
 const kind = "tv";
 const firstRow = 0;
 const secondRow = 1;
-const thirdRow = 2;
 
 const LIST_TYPE = ["PopularTvShows", "TopRatedTvShows"];
 

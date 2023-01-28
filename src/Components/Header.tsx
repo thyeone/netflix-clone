@@ -107,6 +107,7 @@ const Nav = styled(motion.header)`
   background-color: black;
   font-size: 14px;
   padding: 20px 60px;
+  z-index: 999;
   color: white;
 `;
 const Col = styled.div`
