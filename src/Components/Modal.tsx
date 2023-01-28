@@ -74,7 +74,7 @@ function Modal({ movieId, listType, kind }: IProps) {
       <MovieDetail layoutId={movieId + listType}>
         {
           <>
-            {trailer === "" ? (
+            {trailer === "" || trailer === undefined ? (
               <span className="no-video">
                 The movie doesn't have a YouTube video.
               </span>
