@@ -273,16 +273,15 @@ const AddButton = styled(ModalButton)`
   width: 2.75rem;
   height: 2.75rem;
   border: 2px solid gray;
-`;
-
-const LikeButton = styled(AddButton)``;
-
-const VolumeButton = styled(AddButton)`
   :hover {
     border: 2px solid #e5e7eb;
     transition: 0.3s;
   }
 `;
+
+const LikeButton = styled(AddButton)``;
+
+const VolumeButton = styled(AddButton)``;
 
 const PlayButton = styled.button`
   width: 8.5rem;
