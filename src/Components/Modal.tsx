@@ -74,7 +74,11 @@ function Modal({ movieId, listType, kind }: IProps) {
       <MovieDetail layoutId={movieId + listType}>
         {
           <>
-            {
+            {trailer === "" ? (
+              <span className="no-video">
+                The movie doesn't have a YouTube video.
+              </span>
+            ) : (
               <MovieYouTube>
                 <ReactPlayer
                   className="react-player"
@@ -85,7 +89,7 @@ function Modal({ movieId, listType, kind }: IProps) {
                   muted={true}
                 />
               </MovieYouTube>
-            }
+            )}
             {kind === "movie" ? (
               <MovieContents>
                 <div className="top-contents">
@@ -179,6 +183,13 @@ const MovieDetail = styled(motion.div)`
   overflow-y: scroll;
   z-index: 999;
   background-color: ${(props) => props.theme.black.darker};
+  .no-video {
+    /* position: absolute; */
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const MovieContents = styled.div`
