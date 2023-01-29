@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { slideCnt } from "../atoms/atoms";
+import { isMobile, slideCnt } from "../atoms/atoms";
 import { IGetMoviesResult } from "../typing";
 import { makeImagePath } from "../utils/utils";
 import Modal from "./Modal";
@@ -18,6 +18,7 @@ interface IProps {
 }
 
 function Row({ data, title, rowIndex, listType, kind }: IProps) {
+  const mobile = useRecoilValue(isMobile);
   const offset = useRecoilValue(slideCnt);
   const newOffset = offset - 1;
   const [index, setIndex] = useState([0, 0, 0]);
@@ -63,10 +64,10 @@ function Row({ data, title, rowIndex, listType, kind }: IProps) {
     <Wrapper>
       <SilderTitle>{title}</SilderTitle>
       <ArrowBtn>
-        <PrevButton className="arrow">
+        <PrevButton className="arrow" isMobile={mobile}>
           <LeftOutlined onClick={() => changeIndex(false, rowIndex)} />
         </PrevButton>
-        <NextButton className="arrow">
+        <NextButton className="arrow" isMobile={mobile}>
           <RightOutlined onClick={() => changeIndex(true, rowIndex)} />
         </NextButton>
       </ArrowBtn>
@@ -194,7 +195,7 @@ const ArrowBtn = styled.div`
   padding: 20px;
 `;
 
-const PrevButton = styled(motion.div)`
+const PrevButton = styled(motion.div)<{ isMobile: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -204,7 +205,7 @@ const PrevButton = styled(motion.div)`
   z-index: 999;
   cursor: pointer;
   margin-left: 40px;
-  opacity: 0;
+  opacity: ${(props) => (props.isMobile ? 1 : 0)};
   svg {
     width: 20px;
     height: 20px;
