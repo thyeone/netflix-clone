@@ -109,6 +109,9 @@ const Nav = styled(motion.header)`
   padding: 20px 60px;
   z-index: 999;
   color: white;
+  @media screen and (max-width: 767px) {
+    padding: 20px 30px;
+  }
 `;
 const Col = styled.div`
   display: flex;

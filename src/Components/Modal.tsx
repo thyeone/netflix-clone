@@ -9,7 +9,6 @@ import { Element, IMovieDetail } from "../typing";
 import { GetMovieDetail, GetTvDetail } from "../utils/api";
 
 interface IProps {
-  movieMatch: PathMatch<"id">;
   movieId: number;
   listType: string;
   kind?: string;
@@ -61,7 +60,7 @@ function Modal({ movieId, listType, kind }: IProps) {
   useEffect(() => {
     kind === "movie" ? getMovieVideo() : getTvVideo();
   }, []);
-
+  console.log(kind, movieId, trailer);
   return (
     <>
       <Overlay
@@ -243,6 +242,12 @@ function Modal({ movieId, listType, kind }: IProps) {
 const MovieYouTube = styled.div`
   width: 100%;
   height: 70%;
+  @media screen and (max-width: 767px) {
+    height: 50%;
+  }
+  @media screen and (max-width: 420px) {
+    height: 40%;
+  }
 `;
 
 const ModalButton = styled.button`
@@ -330,10 +335,6 @@ const MovieDetail = styled(motion.div)`
   overflow-y: scroll;
   z-index: 999;
   background-color: ${(props) => props.theme.black.darker};
-  @media screen and (min-width: 1920px) {
-    width: 55vw;
-    height: 90vh;
-  }
   .no-video {
     height: 50vh;
     display: flex;
@@ -353,10 +354,20 @@ const MovieDetail = styled(motion.div)`
     display: flex;
     align-items: center;
   }
+  @media screen and (max-width: 1023px) {
+    min-width: 100vw;
+    max-height: 80vh;
+  }
+  @media screen and (max-width: 767px) {
+    max-height: 70vh;
+  }
+  @media screen and (max-width: 420px) {
+    max-height: 90vh;
+  }
 `;
 
 const MovieContents = styled.div`
-  position: absolute;
+  /* position: absolute; */
   padding-left: 40px;
   .top-contents {
     margin: 30px 0;
@@ -399,6 +410,14 @@ const MovieContents = styled.div`
     color: #808080;
     font-size: 14px;
     margin: 10px 0;
+  }
+  @media screen and (max-width: 767px) {
+    .space-between-contents {
+      flex-direction: column;
+    }
+    .right-contents {
+      margin: 0;
+    }
   }
 `;
 

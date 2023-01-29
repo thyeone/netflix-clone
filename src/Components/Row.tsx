@@ -141,7 +141,7 @@ function Row({ data, title, rowIndex, listType, kind }: IProps) {
       <AnimatePresence>
         {movieMatch ? (
           <Modal
-            movieMatch={movieMatch}
+            // movieMatch={movieMatch}
             movieId={Number(movieMatch?.params.id)}
             listType={listType}
             kind={kind}

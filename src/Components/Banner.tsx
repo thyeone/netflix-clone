@@ -69,7 +69,6 @@ function Banner({ nowPlaying, listType, kind }: IProps) {
       <AnimatePresence>
         {movieMatch ? (
           <Modal
-            movieMatch={movieMatch}
             movieId={Number(movieMatch?.params.id)}
             listType={listType || ""}
           />
@@ -84,10 +83,11 @@ const Wrapper = styled.div<{ bgPhoto: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 60px;
+  padding: 3.75rem;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
     url(${(props) => props.bgPhoto});
   background-size: cover;
+  background-position: center center;
   .top {
     position: relative;
     top: -50px;
@@ -98,24 +98,48 @@ const Wrapper = styled.div<{ bgPhoto: string }>`
     column-gap: 10px;
     margin-top: 1rem;
   }
+  @media screen and (max-width: 1023px) {
+    background-position: center top;
+    max-height: 70vh;
+  }
+  @media screen and (max-width: 767px) {
+    min-height: 60vh;
+    padding: 1.5rem;
+  }
 `;
 
 const Title = styled.h2`
-  font-size: 72px;
+  font-size: 4.5rem;
   font-weight: 700;
   margin-bottom: 20px;
+  @media screen and (max-width: 1023px) {
+    font-size: 2.25rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const Overview = styled.p`
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 300;
   line-height: 1.8rem;
-  width: 50%;
+  max-width: 36rem;
+  @media screen and (max-width: 1023px) {
+    font-size: 1.125rem;
+    line-height: 1.6rem;
+    max-width: 28rem;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 0.9rem;
+    line-height: 1.25rem;
+    max-width: 21rem;
+  }
 `;
 
 const PlayButton = styled.button`
   width: 8.5rem;
-  height: 52px;
+  height: 3.25rem;
   background-color: #fff;
   border-radius: 0.25rem;
   display: flex;
@@ -132,8 +156,21 @@ const PlayButton = styled.button`
     transition: all 0.5s ease;
   }
   svg {
-    width: 24.5px;
-    height: 28px;
+    width: 1.5rem;
+    height: 1.75rem;
+  }
+  @media screen and (max-width: 1023px) {
+    width: 8.625rem;
+    height: 3.25rem;
+  }
+  @media screen and (max-width: 767px) {
+    width: 5.7rem;
+    height: 2rem;
+    font-size: 0.9rem;
+    svg {
+      min-width: 1rem;
+      min-height: 1rem;
+    }
   }
 `;
 
@@ -141,13 +178,27 @@ const MoreInfo = styled(PlayButton)`
   width: 12.5rem;
   background-color: #808080b2;
   color: ${(props) => props.theme.white.lighter};
+  white-space: nowrap;
   :hover {
     background-color: #515151;
     transition-duration: 0.15s;
   }
   svg {
-    width: 2rem;
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+  @media screen and (max-width: 1023px) {
+    width: 11.8rem;
+    height: 3.25rem;
+  }
+  @media screen and (max-width: 767px) {
+    width: 8.18rem;
     height: 2rem;
+    font-size: 0.85rem;
+    svg {
+      min-width: 1rem;
+      min-height: 1rem;
+    }
   }
 `;
 
