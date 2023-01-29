@@ -111,18 +111,25 @@ const NoResultMessage = styled.span`
 const Row = styled(motion.div)`
   position: absolute;
   display: grid;
+  place-items: center;
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   width: 100%;
   overflow: hidden;
+  @media screen and (max-width: 1023px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (max-width: 767px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const Box = styled(motion.div)<{ bgphoto: string; offset: number; n: number }>`
   background-image: url(${(props) => props.bgphoto});
   background-position: center;
   background-size: cover;
-  width: 260px;
-  height: 144px;
+  width: 16.25rem;
+  height: 9rem;
   cursor: pointer;
   &:nth-child(5n + 1) {
     transform-origin: center left;
@@ -131,6 +138,29 @@ const Box = styled(motion.div)<{ bgphoto: string; offset: number; n: number }>`
   &:nth-child(5n) {
     transform-origin: center right;
     margin-right: 50px;
+  }
+  @media screen and (max-width: 1023px) {
+    width: 12rem;
+    &:nth-child(5n + 1) {
+      transform-origin: center left;
+      margin-left: 0;
+    }
+    &:nth-child(5n) {
+      transform-origin: center right;
+      margin-right: 0;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    width: 10rem;
+
+    &:nth-child(2n + 1) {
+      transform-origin: center left;
+      margin-left: 30px;
+    }
+    &:nth-child(2n) {
+      transform-origin: center right;
+      margin-right: 50px;
+    }
   }
 `;
 
