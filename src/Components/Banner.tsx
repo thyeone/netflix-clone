@@ -199,8 +199,8 @@ const MoreInfo = styled(PlayButton)`
     height: 2rem;
     font-size: 0.85rem;
     svg {
-      min-width: 1rem;
-      min-height: 1rem;
+      min-width: 1.2rem;
+      min-height: 1.2rem;
     }
   }
 `;

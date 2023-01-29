@@ -271,8 +271,8 @@ const CloseButton = styled(ModalButton)`
 `;
 
 const AddButton = styled(ModalButton)`
-  width: 2.75rem;
-  height: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
   border: 2px solid gray;
   :hover {
     border: 2px solid #e5e7eb;

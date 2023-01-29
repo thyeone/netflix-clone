@@ -2,13 +2,12 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { slideCnt } from "../atoms/atoms";
 import { IGetMoviesResult } from "../typing";
 import { makeImagePath } from "../utils/utils";
 import Modal from "./Modal";
-
-const offset = 6;
-const newOffset = offset - 1;
 
 interface IProps {
   data?: IGetMoviesResult;
@@ -19,6 +18,8 @@ interface IProps {
 }
 
 function Row({ data, title, rowIndex, listType, kind }: IProps) {
+  const offset = useRecoilValue(slideCnt);
+  const newOffset = offset - 1;
   const [index, setIndex] = useState([0, 0, 0]);
   const [leaving, setLeaving] = useState(false);
   const [next, setNext] = useState(true);
@@ -181,6 +182,8 @@ const Slider = styled(motion.div)`
   gap: 10px;
   width: 100%;
   overflow: hidden;
+  @media screen and (max-width: 1023px) {
+  }
 `;
 
 const ArrowBtn = styled.div`
