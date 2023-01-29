@@ -75,9 +75,10 @@ function Search() {
       <AnimatePresence>
         {movieMatch ? (
           <Modal
-            movieMatch={movieMatch}
+            // movieMatch={movieMatch}
             movieId={Number(movieMatch?.params.id)}
             listType={movieMatch?.params.listType || ""}
+            kind={movieMatch?.params.listType}
           />
         ) : null}
       </AnimatePresence>
