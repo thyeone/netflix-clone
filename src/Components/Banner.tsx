@@ -35,8 +35,6 @@ function Banner({ nowPlaying, listType, kind }: IProps) {
         <div className="button">
           <PlayButton>
             <svg
-              stroke="currentColor"
-              fill="currentColor"
               stroke-width="0"
               viewBox="0 0 448 512"
               height="1em"
@@ -141,6 +139,7 @@ const PlayButton = styled.button`
   width: 8.5rem;
   height: 3.25rem;
   background-color: #fff;
+  color: #000;
   border-radius: 0.25rem;
   display: flex;
   justify-content: center;
@@ -158,6 +157,8 @@ const PlayButton = styled.button`
   svg {
     width: 1.5rem;
     height: 1.75rem;
+    stroke: #000;
+    fill: #000;
   }
   @media screen and (max-width: 1023px) {
     width: 8.625rem;
@@ -184,8 +185,10 @@ const MoreInfo = styled(PlayButton)`
     transition-duration: 0.15s;
   }
   svg {
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    fill: white;
+    stroke: none;
   }
   @media screen and (max-width: 1023px) {
     width: 11.8rem;

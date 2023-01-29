@@ -108,8 +108,6 @@ function Modal({ movieId, listType, kind }: IProps) {
                     <div className="left-buttons">
                       <PlayButton>
                         <svg
-                          stroke="currentColor"
-                          fill="currentColor"
                           stroke-width="0"
                           viewBox="0 0 448 512"
                           height="1em"
@@ -142,7 +140,6 @@ function Modal({ movieId, listType, kind }: IProps) {
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke-width="1.5"
-                          stroke="currentColor"
                         >
                           <path
                             stroke-linecap="round"
@@ -158,7 +155,6 @@ function Modal({ movieId, listType, kind }: IProps) {
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke-width="1.5"
-                        stroke="currentColor"
                         aria-hidden="true"
                       >
                         <path
@@ -282,6 +278,9 @@ const AddButton = styled(ModalButton)`
     border: 2px solid #e5e7eb;
     transition: 0.3s;
   }
+  svg {
+    stroke: white;
+  }
 `;
 
 const LikeButton = styled(AddButton)``;
@@ -292,6 +291,7 @@ const PlayButton = styled.button`
   width: 8.5rem;
   height: 52px;
   background-color: #fff;
+  color: #000;
   border-radius: 0.25rem;
   display: flex;
   justify-content: center;
@@ -309,6 +309,8 @@ const PlayButton = styled.button`
   svg {
     width: 24.5px;
     height: 28px;
+    stroke: #000;
+    fill: #000;
   }
 `;
 
