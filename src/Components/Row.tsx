@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { isMobile, slideCnt } from "../atoms/atoms";
+import { isMobile, slideCnt } from "../Atoms/atoms";
 import { IGetMoviesResult } from "../typing";
 import { makeImagePath } from "../utils/utils";
 import Modal from "./Modal";
@@ -18,7 +18,7 @@ interface IProps {
 }
 
 function Row({ data, title, rowIndex, listType, kind }: IProps) {
-  const mobile = useRecoilValue(isMobile);
+  const mobile = useRecoilValue(isMobile).toString();
   const offset = useRecoilValue(slideCnt);
   const newOffset = offset - 1;
   const [index, setIndex] = useState([0, 0, 0]);
@@ -64,10 +64,10 @@ function Row({ data, title, rowIndex, listType, kind }: IProps) {
     <Wrapper>
       <SilderTitle>{title}</SilderTitle>
       <ArrowBtn>
-        <PrevButton className="arrow" isMobile={mobile}>
+        <PrevButton className="arrow" mobile={mobile}>
           <LeftOutlined onClick={() => changeIndex(false, rowIndex)} />
         </PrevButton>
-        <NextButton className="arrow" isMobile={mobile}>
+        <NextButton className="arrow" mobile={mobile}>
           <RightOutlined onClick={() => changeIndex(true, rowIndex)} />
         </NextButton>
       </ArrowBtn>
@@ -143,7 +143,6 @@ function Row({ data, title, rowIndex, listType, kind }: IProps) {
       <AnimatePresence>
         {movieMatch ? (
           <Modal
-            // movieMatch={movieMatch}
             movieId={Number(movieMatch?.params.id)}
             listType={listType}
             kind={kind}
@@ -195,7 +194,7 @@ const ArrowBtn = styled.div`
   padding: 20px;
 `;
 
-const PrevButton = styled(motion.div)<{ isMobile: boolean }>`
+const PrevButton = styled(motion.div)<{ mobile: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -205,7 +204,7 @@ const PrevButton = styled(motion.div)<{ isMobile: boolean }>`
   z-index: 999;
   cursor: pointer;
   margin-left: 40px;
-  opacity: ${(props) => (props.isMobile ? 1 : 0)};
+  opacity: ${(props) => (props.mobile === "true" ? 1 : 0)};
   svg {
     width: 20px;
     height: 20px;
