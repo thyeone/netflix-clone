@@ -1,7 +1,5 @@
 import { useQuery } from "react-query";
-import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { rowState } from "../Atoms/atoms";
 import Banner from "../Components/Banner";
 import Row from "../Components/Row";
 import { IGetMoviesResult } from "../typing";
@@ -15,7 +13,6 @@ const thirdRow = 2;
 const LIST_TYPE = ["NowPlaying", "PopularMovies", "TopRatedMovies"];
 
 function Home() {
-  const row = useRecoilValue(rowState);
   const { isLoading, data: nowPlaying } = useQuery<IGetMoviesResult>(
     ["movies", LIST_TYPE[0]],
     NowPlaying
